@@ -42,7 +42,7 @@ export async function getMetadataAndContent(slug: string) {
           message: "Invalid date string",
         }),
       published: z.boolean(),
-      tags: z.array(z.string()).nullish(),
+      tags: z.array(z.string()),
       og: z
         .string()
         .default("default.jpg")
