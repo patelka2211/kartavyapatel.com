@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const cdnLocation =
-  "https://cdn.jsdelivr.net/gh/patelka2211/kartavyapatel-com.github.io@latest/";
+  "https://cdn.jsdelivr.net/gh/patelka2211/kartavyapatel.com.github.io@latest/";
 
 export function getOgImage(fileName: string) {
   return `og-images/${fileName}`;
