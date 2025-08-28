@@ -5,7 +5,7 @@ import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 import SharerUtilities from "@/components/sharer-utilities";
 import { ThemeProvider } from "@/components/theme-provider";
-import { cdnLocation, cn, getOgImage } from "@/lib/utils";
+import { cn, getOgImage, rootPath } from "@/lib/utils";
 import "./globals.css";
 
 const gelasio = Gelasio({
@@ -17,7 +17,7 @@ const title = "kartavyapatel.com";
 const description = `Kartavya Patel's personal website.`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(cdnLocation),
+  metadataBase: new URL(rootPath),
   title: {
     template: "%s - kartavyapatel.com",
     default: title,

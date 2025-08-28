@@ -5,8 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const cdnLocation =
-  "https://cdn.jsdelivr.net/gh/patelka2211/kartavyapatel.com@latest/";
+export const rootPath = "https://www.kartavyapatel.com/";
 
 export function getOgImage(fileName: string) {
   return `og-images/${fileName}`;

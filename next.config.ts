@@ -1,6 +1,6 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
-import { cdnLocation } from "@/lib/utils";
+import { rootPath } from "@/lib/utils";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  assetPrefix: process.env.DEVELOPMENT === "true" ? "/" : cdnLocation,
+  assetPrefix: process.env.DEVELOPMENT === "true" ? "/" : rootPath,
 };
 
 const withMDX = createMDX({
