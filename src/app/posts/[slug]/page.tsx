@@ -1,8 +1,9 @@
+import { readFileSync } from "node:fs";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { compileMDX } from "next-mdx-remote/rsc";
+import { loadAllMetadata, parseMdx } from "@/_content/posts/data-loader";
 import { getOgImage } from "@/lib/utils";
-import { getMetadataAndContent, slugsAndFullFilePaths } from "../_data-loader";
 
 export const dynamicParams = false;
 
@@ -11,7 +12,7 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return slugsAndFullFilePaths().map(({ slug }) => {
+  return (await loadAllMetadata()).map(({ slug }) => {
     return { slug };
   });
 }
@@ -19,17 +20,19 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = (await params).slug;
 
-  const object = await getMetadataAndContent(slug);
+  const metadata = (await loadAllMetadata()).find(
+    (metadata) => metadata.slug === slug,
+  );
 
-  if (!object) {
+  if (!metadata) {
     return {
       title: "Page Not Found",
     };
   }
 
-  const { excerpt, tags, og } = object.frontmatter;
+  const { excerpt, tags, og } = metadata;
 
-  const title = `${object.frontmatter.title} - Posts`;
+  const title = `${metadata.title} - Posts`;
 
   return {
     title,
@@ -53,12 +56,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const slug = (await params).slug;
 
-  const object = await getMetadataAndContent(slug);
+  const metadata = (await loadAllMetadata()).find(
+    (metadata) => metadata.slug === slug,
+  );
 
-  if (object) {
-    const { content, frontmatter } = object;
+  if (metadata) {
+    const { fullFilePath, title } = metadata;
 
-    const tags = frontmatter.tags || [];
+    const content = await parseMdx(readFileSync(fullFilePath, "utf-8"));
+
+    const tags = metadata.tags || [];
 
     const { content: tagsContent } = await compileMDX({
       source:
@@ -76,12 +83,14 @@ export default async function Page({ params }: Props) {
     });
 
     return (
-      <div className="prose prose-neutral dark:prose-invert">
-        <h1>{frontmatter.title}</h1>
-        {content}
-        <br />
-        {tagsContent}
-      </div>
+      <>
+        <div className="prose prose-neutral dark:prose-invert">
+          <h1>{title}</h1>
+          {content}
+          {tagsContent}
+        </div>
+        {/* related posts */}
+      </>
     );
   }
 

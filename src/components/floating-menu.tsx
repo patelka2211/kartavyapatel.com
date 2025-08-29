@@ -40,7 +40,6 @@ export default function FloatingMenu() {
   const [themeIcon, setThemeIcon] = useState(<DeviceDesktop />);
 
   function themeChange() {
-    console.log(theme);
     switch (theme) {
       case "dark":
         setTheme("light");

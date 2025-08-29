@@ -1,31 +1,14 @@
 import Link from "next/link";
-import {
-  getMetadataAndContent,
-  slugsAndFullFilePaths,
-} from "../../_data-loader";
+import { loadAllMetadata } from "@/_content/posts/data-loader";
 
 interface Props {
   params: { tag: string };
 }
 
 export async function generateStaticParams() {
-  const posts = slugsAndFullFilePaths();
+  const metadata = await loadAllMetadata();
 
-  const tags: string[] = [];
-
-  for (const { slug } of posts) {
-    const output = await getMetadataAndContent(slug);
-
-    if (output) {
-      output.frontmatter.tags?.forEach((tag) => {
-        if (tags.includes(tag)) {
-          return;
-        }
-
-        tags.push(tag);
-      });
-    }
-  }
+  const tags = [...new Set(metadata.flatMap(({ tags }) => tags))];
 
   return tags.map((tag) => {
     return { tag };
