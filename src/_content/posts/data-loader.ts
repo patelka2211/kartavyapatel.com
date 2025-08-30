@@ -50,15 +50,6 @@ const parseFrontmatter = memoize(async (source: string) => {
   }
 });
 
-export const parseMdx = memoize(async (source: string) => {
-  const { content } = await compileMDX({
-    source,
-    options: { parseFrontmatter: true },
-  });
-
-  return content;
-});
-
 export const loadAllMetadata = memoize(async () => {
   const fullFilesPaths = globbySync(`${postsRoot}**/*.mdx`);
 

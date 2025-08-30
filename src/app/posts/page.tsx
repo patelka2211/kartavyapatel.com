@@ -22,9 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  let postsMetadata = await loadAllMetadata();
-
-  postsMetadata = postsMetadata.sort((a, b) => {
+  const postsMetadata = (await loadAllMetadata()).sort((a, b) => {
     const dateA = a.date;
     const dateB = b.date;
 

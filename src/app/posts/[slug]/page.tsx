@@ -1,9 +1,13 @@
 import { readFileSync } from "node:fs";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { compileMDX } from "next-mdx-remote/rsc";
-import { loadAllMetadata, parseMdx } from "@/_content/posts/data-loader";
-import { getOgImage } from "@/lib/utils";
+import type z from "zod";
+import {
+  type frontmatterParser,
+  loadAllMetadata,
+} from "@/_content/posts/data-loader";
+import CompiledMdx from "@/components/compiled-mdx";
+import { getOgImage, usFormattedDate } from "@/lib/utils";
 
 export const dynamicParams = false;
 
@@ -53,6 +57,54 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+async function RelatedPosts({
+  tags,
+  params,
+}: Pick<z.infer<typeof frontmatterParser>, "tags"> & Props) {
+  const metadatas = await loadAllMetadata();
+
+  const slug = (await params).slug;
+
+  const filtered = metadatas
+    .filter((metadata) => {
+      if (slug === metadata.slug) {
+        return false;
+      }
+
+      let itIncludes = false;
+
+      for (let index = 0; index < tags.length; index++) {
+        const tag = tags[index];
+
+        itIncludes = metadata.tags.includes(tag);
+
+        if (itIncludes) {
+          break;
+        }
+      }
+
+      return itIncludes;
+    })
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  if (filtered.length === 0) {
+    return;
+  }
+
+  return (
+    <CompiledMdx
+      source={`---
+###### Related Posts
+
+${filtered
+  .map(({ title, slug }) => `- <Link href="/posts/${slug}">${title}</Link>`)
+  .join("\n")}
+`}
+      components={{ Link }}
+    />
+  );
+}
+
 export default async function Page({ params }: Props) {
   const slug = (await params).slug;
 
@@ -61,36 +113,24 @@ export default async function Page({ params }: Props) {
   );
 
   if (metadata) {
-    const { fullFilePath, title } = metadata;
-
-    const content = await parseMdx(readFileSync(fullFilePath, "utf-8"));
-
-    const tags = metadata.tags || [];
-
-    const { content: tagsContent } = await compileMDX({
-      source:
-        tags.length === 0
-          ? ""
-          : `---\n#### Related Tags${tags
-              .map(
-                (tag) =>
-                  `\n- <Link href={'/posts/tagged/${tag}'}>#${tag}</Link>`,
-              )
-              .join("")}`,
-      components: {
-        Link,
-      },
-    });
-
     return (
-      <>
-        <div className="prose prose-neutral dark:prose-invert">
-          <h1>{title}</h1>
-          {content}
-          {tagsContent}
-        </div>
-        {/* related posts */}
-      </>
+      <article className="prose prose-neutral dark:prose-invert">
+        <CompiledMdx
+          source={`# ${metadata.title}
+            
+            > ${metadata.excerpt}
+
+            > Published: ${usFormattedDate(metadata.date)}
+
+            ---
+            `}
+        />
+        <CompiledMdx
+          source={readFileSync(metadata.fullFilePath, "utf-8")}
+          options={{ parseFrontmatter: true }}
+        />
+        <RelatedPosts params={params} tags={metadata.tags} />
+      </article>
     );
   }
 

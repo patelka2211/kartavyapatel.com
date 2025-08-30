@@ -1,8 +1,10 @@
+import { Separator } from "@radix-ui/react-separator";
 import Link from "next/link";
 import { loadAllMetadata } from "@/_content/posts/data-loader";
+import { cn, usFormattedDate } from "@/lib/utils";
 
 interface Props {
-  params: { tag: string };
+  params: Promise<{ tag: string }>;
 }
 
 export async function generateStaticParams() {
@@ -15,12 +17,37 @@ export async function generateStaticParams() {
   });
 }
 
-export default function Page({ params: { tag } }: Props) {
+export default async function Page({ params }: Props) {
+  const tag = (await params).tag;
+
+  const postsMetadata = (await loadAllMetadata())
+    .filter(({ tags }) => {
+      if (tags.includes(tag)) {
+        return true;
+      }
+
+      return false;
+    })
+    .sort((a, b) => {
+      return b.date.getTime() - a.date.getTime();
+    });
+
   return (
-    <div>
-      This page has not been implemented yet. It will be available soon. Thank
-      you for your cooperation! Meanwhile you can read all posts{" "}
-      <Link href={"/posts"}>here</Link>.
+    <div className="flex flex-col items-center gap-2">
+      {postsMetadata.map(({ date, slug, title }) => {
+        return (
+          <div key={slug} className="w-full">
+            <Link
+              className={cn("w-full", "flex items-center justify-between")}
+              href={`/posts/${slug}`}
+            >
+              <h5>{title}</h5>
+              <p>{usFormattedDate(date)}</p>
+            </Link>
+            <Separator />
+          </div>
+        );
+      })}
     </div>
   );
 }

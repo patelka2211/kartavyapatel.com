@@ -1,11 +1,14 @@
 import { compileMDX, type MDXRemoteProps } from "next-mdx-remote/rsc";
 
-export default async function Comp(props: MDXRemoteProps) {
+export default async function CompiledMdx(props: MDXRemoteProps) {
   const { content } = await compileMDX({
     source: props.source,
     components: props.components,
-    options: props.options,
+    options: {
+      ...props.options,
+      parseFrontmatter: true,
+    },
   });
 
-  return <div className="prose prose-neutral dark:prose-invert">{content}</div>;
+  return content;
 }
