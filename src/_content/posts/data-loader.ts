@@ -1,3 +1,4 @@
+import { hash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,14 +21,22 @@ export const frontmatterParser = z.object({
       message: "Invalid date string",
     }),
   published: z.boolean(),
-  tags: z.array(z.string()),
+  tags: z
+    .array(z.string())
+    .nullish()
+    .transform((tags) => (tags ? tags : [])),
   og: z
     .string()
     .default("default.jpg")
     .transform((filePath) => `/og-images/${filePath}`),
 });
 
-const parseFrontmatter = memoize(async (source: string) => {
+const getParseFrontmatterFunction = () =>
+  process.env.DEVELOPMENT === "true"
+    ? parseFrontmatterUnmemoized
+    : memoize(parseFrontmatterUnmemoized);
+
+const parseFrontmatterUnmemoized = async (source: string) => {
   const { frontmatter } = await compileMDX({
     source,
     options: { parseFrontmatter: true },
@@ -48,9 +57,14 @@ const parseFrontmatter = memoize(async (source: string) => {
       });
     })(error as ZodError);
   }
-});
+};
 
-export const loadAllMetadata = memoize(async () => {
+export const getLoadAllMetadataFunction = () =>
+  process.env.DEVELOPMENT === "true"
+    ? loadAllMetadataUnmemoized
+    : memoize(loadAllMetadataUnmemoized);
+
+const loadAllMetadataUnmemoized = async () => {
   const fullFilesPaths = globbySync(`${postsRoot}**/*.mdx`);
 
   const fms = [];
@@ -60,7 +74,7 @@ export const loadAllMetadata = memoize(async () => {
 
     const source = readFileSync(fullFilePath, "utf-8");
 
-    const fm = await parseFrontmatter(source);
+    const fm = await getParseFrontmatterFunction()(source);
 
     if (fm) {
       fms.push({ ...fm, fullFilePath });
@@ -70,14 +84,19 @@ export const loadAllMetadata = memoize(async () => {
   }
 
   const output = fms.map((value) => {
+    const fileHash = hash("sha256", value.fullFilePath).slice(0, 6);
+
     return {
       ...value,
       slug: slugify(
-        `${value.title}-${usFormattedDate(value.date)}`.replaceAll("/", "-"),
+        `${usFormattedDate(value.date)}-${value.title}-${fileHash}`.replaceAll(
+          "/",
+          "-",
+        ),
         { trim: true, lower: true },
       ),
     };
   });
 
   return output;
-});
+};

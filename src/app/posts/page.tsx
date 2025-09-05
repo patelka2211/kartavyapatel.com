@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadAllMetadata } from "@/_content/posts/data-loader";
+import { getLoadAllMetadataFunction } from "@/_content/posts/data-loader";
 import { Separator } from "@/components/ui/separator";
 import { cn, getOgImage, usFormattedDate } from "@/lib/utils";
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const postsMetadata = (await loadAllMetadata()).sort((a, b) => {
+  const postsMetadata = (await getLoadAllMetadataFunction()()).sort((a, b) => {
     const dateA = a.date;
     const dateB = b.date;
 

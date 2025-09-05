@@ -4,7 +4,7 @@ import Link from "next/link";
 import type z from "zod";
 import {
   type frontmatterParser,
-  loadAllMetadata,
+  getLoadAllMetadataFunction,
 } from "@/_content/posts/data-loader";
 import CompiledMdx from "@/components/compiled-mdx";
 import { getOgImage, usFormattedDate } from "@/lib/utils";
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return (await loadAllMetadata()).map(({ slug }) => {
+  return (await getLoadAllMetadataFunction()()).map(({ slug }) => {
     return { slug };
   });
 }
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = (await params).slug;
 
-  const metadata = (await loadAllMetadata()).find(
+  const metadata = (await getLoadAllMetadataFunction()()).find(
     (metadata) => metadata.slug === slug,
   );
 
@@ -61,7 +61,7 @@ async function RelatedPosts({
   tags,
   params,
 }: Pick<z.infer<typeof frontmatterParser>, "tags"> & Props) {
-  const metadatas = await loadAllMetadata();
+  const metadatas = await getLoadAllMetadataFunction()();
 
   const slug = (await params).slug;
 
@@ -108,7 +108,7 @@ ${filtered
 export default async function Page({ params }: Props) {
   const slug = (await params).slug;
 
-  const metadata = (await loadAllMetadata()).find(
+  const metadata = (await getLoadAllMetadataFunction()()).find(
     (metadata) => metadata.slug === slug,
   );
 
