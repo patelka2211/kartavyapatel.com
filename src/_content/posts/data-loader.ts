@@ -25,10 +25,7 @@ export const frontmatterParser = z.object({
     .array(z.string())
     .nullish()
     .transform((tags) => (tags ? tags : [])),
-  og: z
-    .string()
-    .default("default.jpg")
-    .transform((filePath) => `/og-images/${filePath}`),
+  og: z.string().default("default.jpg"),
 });
 
 const getParseFrontmatterFunction = () =>
