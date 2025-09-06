@@ -60,16 +60,6 @@ export const getLoadAllMetadataFunction = () =>
     ? loadAllMetadataUnmemoized
     : memoize(loadAllMetadataUnmemoized);
 
-// Simple deterministic hash function (djb2 algorithm)
-function djb2Hash(str: string): string {
-  let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) + hash + str.charCodeAt(i);
-  }
-  // Convert to unsigned 32-bit integer and then to hex
-  return (hash >>> 0).toString(16);
-}
-
 const loadAllMetadataUnmemoized = async () => {
   const fullFilesPaths = globbySync(`${postsRoot}**/*.mdx`);
 
@@ -90,15 +80,10 @@ const loadAllMetadataUnmemoized = async () => {
   }
 
   const output = fms.map((value) => {
-    const fileHash = djb2Hash(value.fullFilePath);
-
     return {
       ...value,
       slug: slugify(
-        `${usFormattedDate(value.date)}-${value.title}-${fileHash}`.replaceAll(
-          "/",
-          "-",
-        ),
+        `${usFormattedDate(value.date)}-${value.title}`.replaceAll("/", "-"),
         { trim: true, lower: true },
       ),
     };
