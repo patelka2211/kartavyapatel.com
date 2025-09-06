@@ -7,7 +7,7 @@ import {
   getLoadAllMetadataFunction,
 } from "@/_content/posts/data-loader";
 import CompiledMdx from "@/components/compiled-mdx";
-import { getOgImage, usFormattedDate } from "@/lib/utils";
+import { cn, getOgImage, usFormattedDate } from "@/lib/utils";
 
 export const dynamicParams = false;
 
@@ -114,7 +114,12 @@ export default async function Page({ params }: Props) {
 
   if (metadata) {
     return (
-      <article className="prose prose-neutral dark:prose-invert">
+      <article
+        className={cn(
+          "prose prose-neutral dark:prose-invert",
+          "prose-img:rounded-md",
+        )}
+      >
         <CompiledMdx
           source={`# ${metadata.title}
             
