@@ -1,4 +1,4 @@
-import { hash } from "node:crypto";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -81,7 +81,10 @@ const loadAllMetadataUnmemoized = async () => {
   }
 
   const output = fms.map((value) => {
-    const fileHash = hash("sha256", value.fullFilePath).slice(0, 6);
+    const fileHash = createHash("sha256")
+      .update(value.fullFilePath)
+      .digest("hex")
+      .slice(0, 6);
 
     return {
       ...value,
