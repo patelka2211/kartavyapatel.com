@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -61,6 +60,16 @@ export const getLoadAllMetadataFunction = () =>
     ? loadAllMetadataUnmemoized
     : memoize(loadAllMetadataUnmemoized);
 
+// Simple deterministic hash function (djb2 algorithm)
+function djb2Hash(str: string): string {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) + hash + str.charCodeAt(i);
+  }
+  // Convert to unsigned 32-bit integer and then to hex
+  return (hash >>> 0).toString(16);
+}
+
 const loadAllMetadataUnmemoized = async () => {
   const fullFilesPaths = globbySync(`${postsRoot}**/*.mdx`);
 
@@ -81,10 +90,7 @@ const loadAllMetadataUnmemoized = async () => {
   }
 
   const output = fms.map((value) => {
-    const fileHash = createHash("sha256")
-      .update(value.fullFilePath)
-      .digest("hex")
-      .slice(0, 6);
+    const fileHash = djb2Hash(value.fullFilePath);
 
     return {
       ...value,
