@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Gelasio } from "next/font/google";
 import FloatingMenu from "@/components/floating-menu";
 import Footer from "@/components/footer";
-import ScrollToTop from "@/components/scroll-to-top";
 import SharerUtilities from "@/components/sharer-utilities";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn, getOgImage, rootPath } from "@/lib/utils";
@@ -52,7 +51,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ScrollToTop />
           <main className={cn("flex flex-col items-center")}>
             <div className={cn("w-dvw sm:w-[40rem]")}>
               <div className="relative mb-4">

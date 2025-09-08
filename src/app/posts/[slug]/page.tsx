@@ -7,6 +7,8 @@ import {
   getLoadAllMetadataFunction,
 } from "@/_content/posts/data-loader";
 import CompiledMdx from "@/components/compiled-mdx";
+import RenderKatex from "@/components/mdx/katex";
+import RenderSources from "@/components/mdx/sources";
 import { cn, getOgImage, usFormattedDate } from "@/lib/utils";
 
 export const dynamicParams = false;
@@ -133,6 +135,7 @@ export default async function Page({ params }: Props) {
         <CompiledMdx
           source={readFileSync(metadata.fullFilePath, "utf-8")}
           options={{ parseFrontmatter: true }}
+          components={{ Katex: RenderKatex, Sources: RenderSources }}
         />
         <RelatedPosts params={params} tags={metadata.tags} />
       </article>

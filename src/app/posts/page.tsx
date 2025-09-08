@@ -33,17 +33,28 @@ export default async function Page() {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {postsMetadata.map(({ date, slug, title }) => {
+      {postsMetadata.map(({ date, slug, title, og }, index) => {
         return (
           <div key={slug} className="w-full">
             <Link
-              className={cn("w-full", "flex items-center justify-between")}
+              className={cn(
+                "w-full",
+                "flex flex-col items-center justify-between",
+                "border",
+                "rounded-md",
+                "hover:bg-accent",
+                "mb-2",
+              )}
               href={`/posts/${slug}`}
             >
-              <h5>{title}</h5>
-              <p>{usFormattedDate(date)}</p>
+              {/** biome-ignore lint/performance/noImgElement: img tag is needed. */}
+              <img className="rounded-t-sm" src={`/og-images/${og}`} alt="hi" />
+              <div className="w-full flex items-center justify-between p-2">
+                <h5>{title}</h5>
+                <p>{usFormattedDate(date)}</p>
+              </div>
             </Link>
-            <Separator />
+            {index === postsMetadata.length - 1 ? "" : <Separator />}
           </div>
         );
       })}

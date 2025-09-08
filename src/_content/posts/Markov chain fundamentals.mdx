@@ -1,0 +1,66 @@
+---
+title: Markov Chain Fundamentals
+excerpt: A Markov chain is a mathematical system that describes a sequence of events where the probability of each future state depends only on the current state, not on the history of how the system arrived there.
+published: true
+og: markov.jpeg
+date: 9/8/2025
+tags: []
+---
+
+A Markov chain is a mathematical system that describes a sequence of events where the probability of each future state depends only on the current state, not on the history of how the system arrived there. This fundamental "memoryless" property, known as the Markov property, makes these stochastic processes essential tools across diverse fields including statistics, economics, genetics, and machine learning.
+
+## Transition Matrix Properties
+
+<a href='https://www.youtube.com/watch?v=1GKtfgwf3ig' target='_blank'>
+![](https://img.youtube.com/vi/1GKtfgwf3ig/maxresdefault.jpg)
+</a>
+
+The transition matrix serves as the mathematical backbone of any Markov chain, encoding all possible state transitions as probabilities in a structured format. <Sources links={["https://direct.mit.edu/neco/article/35/11/1713/117578/A-Tutorial-on-the-Spectral-Theory-of-Markov-Chains"]}/> This NxN matrix P organizes transition probabilities <Katex tex="p_{ij} = P(X_{t+1} = j | X_t = i)"/> where each element represents the probability of moving from state i to state j. <Sources links={["https://www.youtube.com/watch?v=1GKtfgwf3ig"]}/> The matrix follows specific structural rules that define its behavior: each row must sum to exactly 1, making it a right stochastic matrix, since the probabilities of transitioning from any given state to all possible next states must account for all possibilities. <Sources links={["https://direct.mit.edu/neco/article/35/11/1713/117578/A-Tutorial-on-the-Spectral-Theory-of-Markov-Chains"]}/>
+
+The power of transition matrices lies in their computational efficiency for predicting future states through matrix multiplication. To determine the probability distribution after n steps, one simply computes <Katex tex="P^n"/> multiplied by the initial state vector, where <Katex tex="P^n"/> represents the transition matrix raised to the nth power. This elegant mathematical framework transforms complex probabilistic calculations into straightforward linear algebra operations, allowing researchers to: <Sources links={['https://www.youtube.com/watch?v=i3AkTO9HLXo']}/>
+
+* Calculate long-term state probabilities without tracking intermediate steps
+* Analyze system behavior through eigenvalues and eigenvectors of the matrix <Sources links={["https://direct.mit.edu/neco/article/35/11/1713/117578/A-Tutorial-on-the-Spectral-Theory-of-Markov-Chains"]}/>
+* Identify steady-state distributions and equilibrium conditions <Sources links={['https://www.stat.auckland.ac.nz/~fewster/325/notes/ch8.pdf']} />
+* Efficiently model systems with large numbers of possible transitions
+
+
+Sources: <Sources overflow={true} links={["https://direct.mit.edu/neco/article/35/11/1713/117578/A-Tutorial-on-the-Spectral-Theory-of-Markov-Chains", "https://www.youtube.com/watch?v=1GKtfgwf3ig", "https://www.youtube.com/watch?v=i3AkTO9HLXo", "https://www.stat.auckland.ac.nz/~fewster/325/notes/ch8.pdf", "https://www.daniellowengrub.com/blog/2020/04/16/efficient-search", "https://en.wikipedia.org/wiki/Markov_chain", "https://www.sciencedirect.com/science/article/pii/S2543925122000377", "https://pmc.ncbi.nlm.nih.gov/articles/PMC6697417/", "https://brilliant.org/wiki/markov-chains/", "https://www.sciencedirect.com/science/article/pii/S1572528610000435"]} />
+
+## Discrete-time Markov chains
+
+<a href='https://www.youtube.com/watch?v=e82aQDX0csM' target='_blank'>
+![](https://img.youtube.com/vi/e82aQDX0csM/maxresdefault.jpg)
+</a>
+
+Discrete-time Markov chains operate in distinct time steps, where transitions between states occur at regular intervals denoted as <Katex tex="t = 0, 1, 2, 3, ..."/> This temporal structure creates a sequence of random variables <Katex tex="X_0, X_1, X_2, ..."/> where each <Katex tex="X_n"/> represents the system's state at time n <Sources links={['https://www.mathworks.com/help/econ/discrete-time-markov-chains.html']} />. The defining characteristic emerges in the conditional probability formula: <Katex tex="\text{Pr}(X_{n+1} = x | X_1 = x_1, X_2 = x_2, ..., X_n = x_n) = \text{Pr}(X_{n+1} = x | X_n = x_n)"/>, provided the conditional probabilities are well-defined <Sources links={['https://www.mathworks.com/help/econ/discrete-time-markov-chains.html']} />.
+
+The discrete-time framework enables precise modeling of systems that change at specific intervals rather than continuously. For instance, a machine alternating between operational state A and error state E might transition with fixed probabilities at each time step: from A to E with 40% probability, remaining in A with 60% probability, while from E it moves to A with 70% probability and stays in E with 30% probability. This temporal discretization proves particularly valuable when analyzing: <Sources links={['https://www.mathworks.com/help/econ/discrete-time-markov-chains.html']} />
+
+* Systems with periodic observations or measurements
+* Financial models where state changes occur at market close intervals  
+* Population genetics where generations represent discrete time steps
+* Queue management systems where customers arrive at regular intervals <Sources links={['https://en.wikipedia.org/wiki/Discrete-time_Markov_chain']} />
+
+The state space can range from finite sets for simple binary systems to countable infinite sets for more complex scenarios, with the discrete-time structure maintaining mathematical tractability through matrix operations and iterative calculations. <Sources links={["http://faculty.washington.edu/yenchic/18A_stat516/Lec3_DTMC_p1.pdf","http://www.columbia.edu/~ks20/stochastic-I/stochastic-I-MCI.pdf"]}/>
+
+Sources:  <Sources overflow={true} links={["https://www.mathworks.com/help/econ/discrete-time-markov-chains.html", "https://en.wikipedia.org/wiki/Discrete-time_Markov_chain", "http://faculty.washington.edu/yenchic/18A_stat516/Lec3_DTMC_p1.pdf", "http://www.columbia.edu/~ks20/stochastic-I/stochastic-I-MCI.pdf", "https://www.maths.bath.ac.uk/~ak257/36/Markov.pdf", "https://www.probabilitycourse.com/chapter11/11_3_1_introduction.php", "https://www.lancaster.ac.uk/stor-i-student-sites/james-neill/wp-content/uploads/sites/47/2023/01/Dissertation.pdf", "https://timeseriesreasoning.com/contents/introduction-to-discrete-time-markov-processes/", "https://www.youtube.com/watch?v=e82aQDX0csM"]} />
+
+## Continuous-time Markov chains
+
+<a href='https://forum.effectivealtruism.org/posts/Et9Rnescdp6CtYBh4/existential-risk-modelling-with-continuous-time-markov' target='_blank'>
+![](https://39669.cdn.cke-cs.com/cgyAlfpLFBBiEjoXacnz/images/e7a914e4b79e95b3218b0daaf4f011594b650c13d095b07f.png)
+</a>
+
+Continuous-time Markov chains (CTMCs) extend the Markov framework to scenarios where state transitions can occur at any moment rather than fixed intervals, making them ideal for modeling real-world systems that evolve continuously. Unlike their discrete-time counterparts, CTMCs are governed by rate matrices (also called generator matrices or intensity matrices) denoted as Q, where each element <Katex tex="q_{ij}"/> represents the instantaneous rate of transitioning from state i to state j. The diagonal elements <Katex tex="q_{ii}"/> are negative and equal to <Katex tex="-\sum_{j \neq i} q_{ij}"/>, ensuring that each row sums to zero—a fundamental property distinguishing rate matrices from probability matrices. <Sources links={["https://jair.org/index.php/jair/article/download/10921/26035/20379", "https://en.wikipedia.org/wiki/Markov_chain"]} />
+
+The continuous-time structure introduces exponential waiting times between transitions, where the time spent in any state follows an exponential distribution with parameter equal to the negative diagonal element of that state's row. This memoryless property of exponential distributions preserves the Markov characteristic in continuous time. Key applications demonstrate the versatility of CTMCs: <Sources links={['https://jair.org/index.php/jair/article/download/10921/26035/20379']} />
+
+* **Biological modeling**: DNA evolution models where nucleotide substitutions occur at continuous rates over evolutionary time <Sources links={['https://direct.mit.edu/neco/article/35/11/1713/117578/A-Tutorial-on-the-Spectral-Theory-of-Markov-Chains']} />
+* **Reliability engineering**: Systems where component failures happen randomly in continuous time
+* **Queueing theory**: Service systems where arrivals and departures occur at varying continuous rates
+* **Chemical kinetics**: Reaction networks where molecular interactions follow continuous stochastic processes
+
+The mathematical analysis of CTMCs often employs uniformization techniques, which convert continuous-time problems into discrete-time equivalents by constructing a stochastic matrix <Katex tex="M = Q/\alpha + I"/> where <Katex tex="\alpha"/> exceeds the maximum rate in the system. This approach enables researchers to leverage discrete-time computational methods while maintaining the continuous-time model's accuracy and interpretability. <Sources links={['https://en.wikipedia.org/wiki/Markov_chain']} />
+
+Sources: <Sources overflow={true} links={["https://jair.org/index.php/jair/article/download/10921/26035/20379", "https://en.wikipedia.org/wiki/Markov_chain", "https://direct.mit.edu/neco/article/35/11/1713/117578/A-Tutorial-on-the-Spectral-Theory-of-Markov-Chains", "http://www.columbia.edu/~ww2040/6711F13/CTMCnotes120413.pdf", "https://tsourakakis.com/wp-content/uploads/2024/02/markovletics.pdf", "https://www.alooba.com/skills/concepts/machine-learning/markov-chains/", "https://jaro.in/blog/markov-chain-analysis-in-data-science", "https://arxiv.org/abs/1909.05794"]} />

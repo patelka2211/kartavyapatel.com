@@ -23,9 +23,9 @@ const CustomButton = ({
     variant={"secondary"}
     className={cn(
       "cursor-pointer",
-      "opacity-55 hover:opacity-100",
       "border",
       "rounded-full",
+      "hover:bg-accent hover:text-accent-foreground",
       className,
     )}
     {...props}
@@ -61,8 +61,6 @@ export default function FloatingMenu() {
   const links = [
     { url: "/", name: "Home", icon: <HomeIcon /> },
     { url: "/posts", name: "Posts", icon: <FileTextIcon /> },
-    // { url: "/projects", name: "Projects", icon: <FolderIcon /> },
-    // { url: "/about", name: "About", icon: <InfoIcon /> },
   ];
 
   const pathname = usePathname().split("/").slice(0, 2).join("/");
@@ -75,7 +73,6 @@ export default function FloatingMenu() {
         "sticky bottom-4",
         "w-[calc(100%-2rem)]",
         "mx-auto",
-        // "max-w-[20rem]",
         "flex items-center justify-between",
       )}
     >
@@ -87,7 +84,7 @@ export default function FloatingMenu() {
               title={name}
               className={
                 pathname === url
-                  ? "bg-primary hover:bg-primary text-primary-foreground hover:text-primary-foreground opacity-100"
+                  ? "bg-primary hover:bg-primary text-primary-foreground hover:text-primary-foreground"
                   : ""
               }
               onClick={() => {
