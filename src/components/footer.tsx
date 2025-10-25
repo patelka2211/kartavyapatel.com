@@ -12,7 +12,7 @@ export default function Footer() {
     },
     {
       link: "https://linkedin.com/in/kartavyapatel",
-      icon: <LogoLinkedIn />,
+      icon: <LogoLinkedIn className="w-[24px]" />,
     },
   ];
 

@@ -6,6 +6,7 @@ interface Props {
 }
 
 export default function RenderSources({ links, overflow }: Props) {
+  // https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url={url}&size={size}
   return (
     <span
       className={cn(

@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 export default function Page(props: HTMLAttributes<SVGElement>) {
   return (
     <svg
-      width="24"
-      height="24"
+      // width="24"
+      // height="24"
       strokeLinejoin="round"
       color="currentcolor"
       data-testid="geist-icon"
